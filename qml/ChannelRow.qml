@@ -5,8 +5,23 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.1
 
 Rectangle {
+  id: channelBlock
   property var channel
   color: '#333'
+
+	function updateMode(m) {
+	   var oldMode = channel.mode;
+	   channel.mode = m;
+	   var chIdx = {A: 1, B: 2}[channel.label];
+       if (oldMode != channel.mode)
+          console.log("changing " + chIdx + " from " + oldMode + " to " + channel.mode);
+	   xyPane.children[2+chIdx].ysignal = (channel.mode == 1) ? xyPane.children[2+chIdx].isignal : xyPane.children[2+chIdx].vsignal;
+	   xyPane.children[2+chIdx].xsignal = (channel.mode == 1) ? xyPane.children[2+chIdx].vsignal : xyPane.children[2+chIdx].isignal;
+       if ( (controller.continuous) & (oldMode != channel.mode) & (controller.enabled)) {
+         controller.changingMode = true;
+         controller.toggle();
+       }
+	}
 
   Button {
     anchors.top: parent.top
@@ -28,21 +43,16 @@ Rectangle {
       }
     }
 
-    function updateMode() {
-       var chIdx = {A: 1, B: 2}[channel.label];
-       xyPane.children[2+chIdx].ysignal = (channel.mode == 1) ? xyPane.children[2+chIdx].isignal : xyPane.children[2+chIdx].vsignal;
-       xyPane.children[2+chIdx].xsignal = (channel.mode == 1) ? xyPane.children[2+chIdx].vsignal : xyPane.children[2+chIdx].isignal;
-    }
 
     menu: Menu {
       MenuItem { text: "Measure Voltage"
-        onTriggered: channel.mode = 0
+        onTriggered: channelBlock.updateMode(0);
       }
       MenuItem { text: "Source Voltage, Measure Current"
-        onTriggered: channel.mode = 1
+        onTriggered: channelBlock.updateMode(1)
       }
       MenuItem { text: "Source Current, Measure Voltage"
-        onTriggered: channel.mode = 2
+        onTriggered: channelBlock.updateMode(2)
       }
     }
   }

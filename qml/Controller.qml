@@ -13,9 +13,15 @@ Item {
   readonly property int sampleCount: sampleTime * sampleRate
 
   function trigger() {
-    session.sampleRate = sampleRate
-    session.sampleCount = sampleCount
-    session.start(continuous);
+    if (enabled) {
+      session.sampleRate = sampleRate
+      session.sampleCount = sampleCount
+      session.start(continuous);
+      console.log("started");
+    }
+    else {
+     console.log("triggered but not enabled");
+   }
   }
 
   Timer {
@@ -26,8 +32,8 @@ Item {
 
   function toggle() {
     if (!enabled) {
-      trigger();
       enabled = true;
+      trigger();
     } else {
       enabled = false;
       if (continuous || sampleTime > 0.1) {
@@ -36,9 +42,17 @@ Item {
     }
   }
 
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+  }
+
   Connections {
     target: session
     onFinished: {
+      console.log("finished: " + "c: " + continuous + " e: " + enabled + " m: " + changingMode);
       if (!continuous) {
         if (repeat) {
             if (enabled) {
@@ -49,13 +63,10 @@ Item {
         }
       }
       else {
+        enabled = false
         if (changingMode) {
-            trigger();
+            delay(100, toggle);
             changingMode = false;
-            console.log("changing mode");
-        }
-        else {
-          enabled = false
         }
       }
     }

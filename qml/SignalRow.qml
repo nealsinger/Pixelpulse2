@@ -12,11 +12,8 @@ Rectangle {
   color: '#444'
 
   function updateMode() {
-    channel.mode = {'Voltage': 1, 'Current': 2}[signal.label];
-    var target = parent.parent.parent;
-    for (var sig in target.children)
-        if (target.children[sig].children[0])
-           target.children[sig].children[0].updateMode();
+    var m = {'Voltage': 1, 'Current': 2}[signal.label];
+    channelBlock.updateMode(m);
   }
 
   function switchToConstant() {
