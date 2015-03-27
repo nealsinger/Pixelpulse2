@@ -1,13 +1,14 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.1
+import "prunedjson.js" as PrunedJSON
 
 ColumnLayout {
   spacing: 12
   width: contentPane.width
 
   ToolbarStyle {
-    width: parent.width
+    Layout.fillWidth: true
     height: toolbarHeight
   }
 
@@ -31,12 +32,12 @@ ColumnLayout {
 	text: "type here."
 	color: "#FFF"
     onAccepted: {
-	  outField.text = JSON.stringify(eval(text), null, 2)
+	  outField.text = PrunedJSON.toJSON(eval(text), 5, 10, "  ");
     }
 	selectByMouse: true
   }
   MouseArea {
     anchors.fill: inField
-    onPressed: { mouse.accepted = false; inField.text = "" }
+    onPressed: { mouse.accepted = false; if (inField.text == "type here.") {inField.text = "" }}
   }
 }
