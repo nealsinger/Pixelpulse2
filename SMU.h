@@ -26,15 +26,10 @@ class SessionItem : public QObject {
 public:
     SessionItem();
     ~SessionItem();
-    Q_INVOKABLE void openAllDevices();
-    Q_INVOKABLE void closeAllDevices();
-
     Q_INVOKABLE void start(bool continuous);
     Q_INVOKABLE void cancel();
     int getAvailableDevices() { return m_session->m_available_devices.size(); }
     int getActiveDevices() { return m_session->m_devices.size(); }
-
-
     bool getActive() { return m_active; }
     QQmlListProperty<DeviceItem> getDevices() { return QQmlListProperty<DeviceItem>(this, m_devices); }
 

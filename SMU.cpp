@@ -24,6 +24,12 @@ m_continuous(false),
 m_sample_rate(0),
 m_sample_count(0)
 {
+    // scan for available devices when a SessionItem is created
+    m_session->update_available_devices();
+    // call the onAttached handler to setup each device found
+    for (auto i: m_session->m_available_devices) {
+        onAttached(i.get());
+    }
     connect(this, &SessionItem::progress, this, &SessionItem::onProgress, Qt::QueuedConnection);
     connect(this, &SessionItem::finished, this, &SessionItem::onFinished, Qt::QueuedConnection);
     connect(this, &SessionItem::attached, this, &SessionItem::onAttached, Qt::QueuedConnection);
@@ -46,36 +52,13 @@ m_sample_count(0)
 }
 
 SessionItem::~SessionItem() {
-        Q_ASSERT(m_devices.size() == 0);
-}
-
-
-/// called on initialisation
-void SessionItem::openAllDevices()
-{
-    m_session->update_available_devices();
+    // clean up all devices when a SessionItem is being destroyed
     for (auto i: m_session->m_available_devices) {
-		auto dev = m_session->add_device(&*i);
-        m_devices.append(new DeviceItem(this, dev));
-	}
-    devicesChanged();
+        onDetached(i.get());
+    }
+    Q_ASSERT(m_devices.size() == 0);
 }
 
-/// called at exit
-void SessionItem::closeAllDevices()
-{
-        qDebug() << "Closing devices";
-        m_session->cancel();
-        m_session->end();
-        QList<DeviceItem *> devices;
-        m_devices.swap(devices);
-        devicesChanged();
-
-        for (auto i: devices) {
-            m_session->remove_device(i->m_device);
-            delete i;
-        }
-}
 
 /// configure device, datapaths, and start streaming
 void SessionItem::start(bool continuous)
@@ -128,6 +111,8 @@ void SessionItem::onAttached(Device *device)
     Q_UNUSED(dev);
     m_devices.append(new DeviceItem(this, device));
     devicesChanged();
+    m_sample_rate = device->get_default_rate();
+    sampleRateChanged();
 }
 
 /// handles hotplug detach condition

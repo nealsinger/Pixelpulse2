@@ -65,6 +65,7 @@ ToolbarStyle {
 
     onClicked: {
       if (session.availableDevices > 0) {
+        controller.sampleRate = session.sampleRate;
         controller.toggle()
       }
     }

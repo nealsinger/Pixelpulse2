@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     registerTypes();
 
     SessionItem smu_session;
-    smu_session.openAllDevices();
     engine.rootContext()->setContextProperty("session", &smu_session);
 
 	QVariantMap versions;
@@ -38,7 +37,6 @@ int main(int argc, char *argv[])
 
 
     int r = app.exec();
-    smu_session.closeAllDevices();
 
     return r;
 }
