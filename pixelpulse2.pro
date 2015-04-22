@@ -1,5 +1,5 @@
 TEMPLATE = app
-
+ 
 QT += qml quick widgets
 CONFIG += c++11
 
