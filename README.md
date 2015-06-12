@@ -56,7 +56,7 @@ To build / install for Debian, from the `pixelpulse2` directory:
 
 To build / run on Ubuntu 15.04, via [shabaz on Farnell](http://www.element14.com/community/groups/test-and-measurement/blog/2015/02/14/getting-started-with-the-active-learning-module-adalm1000).  
 
- * Please note that you make encounter issues if you are running a version of Ubuntu lower than 15.04, because the version of QT in the repositories will likely be less than 5.4 (this also applies if you are running a Linux distribution that uses an older version of Ubuntu, for example Linux Mint 17.1, which uses Ubuntu 14.04.)
+ * Please note that you may encounter issues if you are running a version of Ubuntu lower than 15.04, because the version of QT in the repositories will likely be less than 5.4 (this also applies if you are running a Linux distribution that uses an older version of Ubuntu, for example Linux Mint 17.1, which uses Ubuntu 14.04.)
 
 * Get ready
 
@@ -78,7 +78,7 @@ To build / run on Ubuntu 15.04, via [shabaz on Farnell](http://www.element14.com
     chmod 755 qt-o*
     ./qt-opensource-linux-x64-5.4.0-rc.run
     ```
-    
+ * Go with the default options that the installer suggests.  Note that you don't need to run Qt after installing it.   
 * Install a couple extra Qt modules
     ```bash
     sudo apt-get install qtdeclarative5-controls-plugin
@@ -101,6 +101,7 @@ To build / run on Ubuntu 15.04, via [shabaz on Farnell](http://www.element14.com
 * Make a new folder, clone the pixelpulse library into it from git, and build it!
 
     ```bash
+    cd ~
     mkdir development
     cd development
     git clone --recursive https://github.com/signalspec/pixelpulse2
